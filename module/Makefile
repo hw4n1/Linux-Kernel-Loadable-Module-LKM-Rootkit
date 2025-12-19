@@ -1,14 +1,11 @@
+# Linux-Kernel-Loadable-Module-LKM-Rootkit/module/Makefile
+obj-m := rootkit_lkm_mod.o
+rootkit_lkm_mod-objs := rootkit_lkm.o cr0_rw.o
 
-# Target object name
-obj-m := rootkit_lkm.o cr0_rw.o
-
-# Kernel build directory path
 KDIR := /lib/modules/$(shell uname -r)/build
 
-# Default compilation rule
 all:
 	$(MAKE) -C $(KDIR) M=$(PWD) modules
 
-# Cleanup rule
 clean:
 	$(MAKE) -C $(KDIR) M=$(PWD) clean

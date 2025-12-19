@@ -13,3 +13,6 @@ void enable_write_protection(void) {
     set_bit(16, &cr0);
     write_cr0(cr0);
 }
+
+MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("Hardware abstraction layer for CR0 manipulation");
